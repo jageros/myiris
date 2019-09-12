@@ -2,34 +2,38 @@ package main
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"myiris/conf"
+	"math/rand"
+	"myiris/db"
 )
 
-type User struct {
-	gorm.Model
-	Name     string
-	PhoneNum string
-	Age      int
-	Sex      string
-}
+
 
 func main() {
-	cfg := conf.GetDBCfg()
-	fmt.Printf("cfg=%v\n", cfg)
-	url := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)
-	db, err := gorm.Open("mysql", url)
-	if err != nil {
-		panic(err)
+	u := db.GetData(6)
+	fmt.Printf("user=%+v\n", u)
+	for id := 8001; id < 8050; id++ {
+		pwd := fmt.Sprintf("pwd_%d", id)
+		name := fmt.Sprintf("jager_%d", id)
+		phone := fmt.Sprintf("1316060%d", id)
+		age := rand.Int()%90+10
+		sex := "m"
+		if age%2 == 0 {
+			sex = "f"
+		}
+		newUser := db.NewUser(uint(id), pwd, name, phone, age, sex)
+		if db.SignUp(newUser) {
+			fmt.Printf("Sign up successful!\n")
+		}else {
+			fmt.Printf("Sign up failed, id exist or data error!\n")
+		}
 	}
-	defer db.Close()
-	u := User{Name:"jay", PhoneNum:"13160676598", Age:22, Sex:"female"}
-	if !db.HasTable(&u) {
-		db.CreateTable(&u)
+
+	if db.Login(80080, "asdf") {
+		u := db.GetData(80080)
+		fmt.Printf("Login successful, wellcome %s!", u.Name)
+	}else {
+		fmt.Printf("Login failed, account or password error!")
 	}
-	db.Create(&u)
-	db.NewRecord(u)
-	db.Save(&u)
-	fmt.Printf("Run end!\n")
+	fmt.Printf("\nRun end!\n")
 }
