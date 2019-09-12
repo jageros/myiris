@@ -13,7 +13,7 @@ var (
 )
 
 type DatabaseData struct {
-	UserData map[uint]*User
+	commentData map[uint]*Comment
 }
 
 func init() {
@@ -27,20 +27,23 @@ func init() {
 	if !db.HasTable(&User{}) {
 		db.CreateTable(&User{})
 	}
+	if !db.HasTable(&Comment{}) {
+		db.CreateTable(&Comment{})
+	}
 	dbCon = db
 	dbs = &DatabaseData{}
-	dbs.UserData = map[uint]*User{}
+	dbs.commentData = map[uint]*Comment{}
 }
 
 func Save(ids ...uint) {
 	if len(ids) > 0 {
 		for _, id := range ids {
-			if u, ok := dbs.UserData[id]; ok {
+			if u, ok := dbs.commentData[id]; ok {
 				u.save()
 			}
 		}
 	} else {
-		for _, u := range dbs.UserData {
+		for _, u := range dbs.commentData {
 			u.save()
 		}
 	}

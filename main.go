@@ -30,7 +30,7 @@ func main() {
 	}
 
 	if db.Login(80080, "asdf") {
-		u := db.GetData(80080)
+		u := db.GetUser(80080)
 		fmt.Printf("Login successful, wellcome %s!", u.Name)
 	}else {
 		fmt.Printf("Login failed, account or password error!")

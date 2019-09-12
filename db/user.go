@@ -34,12 +34,12 @@ func (u *User) save() {
 
 func GetUser(id uint) *User {
 	var u = &User{}
-	if dd, ok := dbs.UserData[id]; ok {
+	if dd, ok := dbs.userData[id]; ok {
 		u = dd
 	} else {
 		dbCon.Where("id = ?", strconv.Itoa(int(id))).First(u)
 		if u.ID > 0 {
-			dbs.UserData[u.ID] = u
+			dbs.userData[u.ID] = u
 		}
 	}
 	return u
@@ -67,13 +67,13 @@ func Login(id uint, pwd string) bool {
 
 func UpdateUserInfo(uInfo *User) {
 	id := uInfo.ID
-	if u, ok := dbs.UserData[id]; ok {
+	if u, ok := dbs.userData[id]; ok {
 		u.Name = uInfo.Name
 		u.PhoneNum = uInfo.PhoneNum
 		u.Age = uInfo.Age
 		u.Sex = uInfo.Sex
 	} else {
-		dbs.UserData[uInfo.ID] = uInfo
+		dbs.userData[uInfo.ID] = uInfo
 	}
 	uInfo.save()
 }
