@@ -4,3 +4,6 @@ port = 3306
 user = "root"
 password = "<Jay>123."
 dbName = "gorm_test"
+
+[comment]
+cnt = 999

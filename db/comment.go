@@ -1,9 +1,12 @@
 package db
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"myiris/common"
+	"myiris/conf"
 	"strconv"
+	"time"
 )
 
 type Comment struct {
@@ -21,7 +24,7 @@ func NewComment(uid uint, content string) *Comment {
 		Content: content,
 		LikeCnt: 0,
 		HateCnt: 0,
-		DayNo:   common.GetDayNo(),
+		DayNo:   com.GetDayNo(),
 	}
 	return cm
 }
@@ -50,19 +53,31 @@ func GetCommentsByUid(uid uint) []*Comment {
 }
 
 func PublicComment(cm *Comment) {
+	u := GetUser(cm.Uid)
+	if com.GetDayNo(u.CommentTime) == com.GetDayNo() {
+		cnt := conf.GetCommentCfg().Cnt
+		if u.CommentCnt >= cnt {
+			fmt.Printf("Allow public comment only %d times a day!\n", cnt)
+			return
+		}
+	}
+	u.CommentTime = time.Now().Unix()
+	u.CommentCnt += 1
+	u.save()
 	cm.save()
+	fmt.Printf("uid=%d comment successful!\n", cm.Uid)
 }
 
 func LikeComment(id uint) {
 	cm := GetComment(id)
 	if cm.ID > 0 {
-		cm.LikeCnt = cm.LikeCnt + 1
+		cm.LikeCnt += 1
 	}
 }
 
 func HateComment(id uint) {
 	cm := GetComment(id)
 	if cm.ID > 0 {
-		cm.HateCnt = cm.HateCnt + 1
+		cm.HateCnt += 1
 	}
 }

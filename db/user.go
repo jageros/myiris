@@ -2,8 +2,8 @@ package db
 
 import (
 	"github.com/jinzhu/gorm"
+	"myiris/common"
 	"strconv"
-	"time"
 )
 
 type User struct {
@@ -13,12 +13,13 @@ type User struct {
 	PhoneNum    string
 	Age         int
 	Sex         string
-	CommentTime time.Time
+	CommentTime int64
+	CommentCnt  int
 }
 
 func NewUser(id uint, pwd string, name string, phone string, age int, sex string) *User {
 	u := &User{
-		Password: pwd,
+		Password: com.Md5(pwd),
 		Name:     name,
 		PhoneNum: phone,
 		Age:      age,
@@ -33,15 +34,8 @@ func (u *User) save() {
 }
 
 func GetUser(id uint) *User {
-	var u = &User{}
-	if dd, ok := dbs.userData[id]; ok {
-		u = dd
-	} else {
-		dbCon.Where("id = ?", strconv.Itoa(int(id))).First(u)
-		if u.ID > 0 {
-			dbs.userData[u.ID] = u
-		}
-	}
+	u := &User{}
+	dbCon.Where("id = ?", strconv.Itoa(int(id))).First(u)
 	return u
 }
 
@@ -59,22 +53,13 @@ func SignUp(u *User) bool {
 
 func Login(id uint, pwd string) bool {
 	u := GetUser(id)
-	if u.Password == pwd {
+	if u.Password == com.Md5(pwd) {
 		return true
 	}
 	return false
 }
 
 func UpdateUserInfo(uInfo *User) {
-	id := uInfo.ID
-	if u, ok := dbs.userData[id]; ok {
-		u.Name = uInfo.Name
-		u.PhoneNum = uInfo.PhoneNum
-		u.Age = uInfo.Age
-		u.Sex = uInfo.Sex
-	} else {
-		dbs.userData[uInfo.ID] = uInfo
-	}
 	uInfo.save()
 }
 

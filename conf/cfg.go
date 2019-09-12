@@ -5,8 +5,11 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+var cfg *Cfg
+
 type Cfg struct {
-	DBConfig *DatabaseCfg `toml:"database"`
+	DBConfig   *DatabaseCfg `toml:"database"`
+	CommentCfg *Comment     `toml:"comment"`
 }
 
 type DatabaseCfg struct {
@@ -17,10 +20,22 @@ type DatabaseCfg struct {
 	DBName   string `toml:"dbName"`
 }
 
-func GetDBCfg() *DatabaseCfg {
+type Comment struct {
+	Cnt int `toml:"cnt"`
+}
+
+func init() {
 	var config *Cfg
 	if _, err := toml.DecodeFile("conf/config.toml", &config); err != nil {
 		fmt.Println(err)
 	}
-	return config.DBConfig
+	cfg = config
+}
+
+func GetDBCfg() *DatabaseCfg {
+	return cfg.DBConfig
+}
+
+func GetCommentCfg() *Comment {
+	return cfg.CommentCfg
 }
