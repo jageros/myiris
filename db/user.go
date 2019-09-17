@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/jinzhu/gorm"
-	"myiris/common"
+	"myiris/com"
 	"strconv"
 )
 
