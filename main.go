@@ -38,6 +38,6 @@ func main() {
 	}
 
 	cm := db.NewComment(user.ID, "hello world!")
-	db.PublicComment(cm)
+	db.PublicComment(u, cm)
 	fmt.Printf("Run end!--dayNo=%d weekNo=%d\n", timer.GetDayNo(), timer.GetWeekNo())
 }
