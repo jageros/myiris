@@ -33,6 +33,7 @@ func init() {
 	dbCon = db
 	dbs = &DatabaseData{}
 	dbs.commentData = map[uint]*Comment{}
+	defer db.Close()
 }
 
 func Save(ids ...uint) {

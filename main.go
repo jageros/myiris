@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"math/rand"
-	"myiris/com"
+	"myiris/common/timer"
 	"myiris/db"
 )
 
@@ -18,22 +18,26 @@ func main() {
 		if age%2 == 0 {
 			sex = "f"
 		}
-		newUser := db.NewUser(uint(id), pwd, name, phone, age, sex)
-		if db.SignUp(newUser) {
-			fmt.Printf("Sign up successful!\n")
+
+		newUser := db.Register(pwd, name, phone, age, sex)
+		if newUser == nil {
+			fmt.Printf("Register failed, id exist or data error!\n")
 		} else {
-			fmt.Printf("Sign up failed, id exist or data error!\n")
+			fmt.Printf("Register successful, wellcome %s\n", newUser.GetName())
 		}
 	}
-	var uid = uint(9003)
-	if db.Login(uid, "pwd_9003") {
-		u := db.GetUser(uid)
-		fmt.Printf("Login successful, wellcome %s!\n", u.Name)
-	} else {
+
+	var phoneNum = "13160676597"
+	var user *db.User
+	u := db.Login(phoneNum, "pwd_9003")
+	if u == nil {
 		fmt.Printf("Login failed, account or password error!\n")
 		return
+	} else {
+		fmt.Printf("Login successful, wellcome %s!\n", u.GetName())
 	}
-	cm := db.NewComment(uid, "你好吗？!")
+
+	cm := db.NewComment(user.ID, "hello world!")
 	db.PublicComment(cm)
-	fmt.Printf("Run end!--dayNo=%d weekNo=%d\n", com.GetDayNo(), com.GetWeekNo())
+	fmt.Printf("Run end!--dayNo=%d weekNo=%d\n", timer.GetDayNo(), timer.GetWeekNo())
 }

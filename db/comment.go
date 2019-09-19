@@ -3,10 +3,9 @@ package db
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"myiris/com"
+	"myiris/common/timer"
 	"myiris/conf"
 	"strconv"
-	"time"
 )
 
 type Comment struct {
@@ -24,7 +23,7 @@ func NewComment(uid uint, content string) *Comment {
 		Content: content,
 		LikeCnt: 0,
 		HateCnt: 0,
-		DayNo:   com.GetDayNo(),
+		DayNo:   timer.GetDayNo(),
 	}
 	return cm
 }
@@ -52,18 +51,13 @@ func GetCommentsByUid(uid uint) []*Comment {
 	return cm
 }
 
-func PublicComment(cm *Comment) {
-	u := GetUser(cm.Uid)
-	if com.GetDayNo(u.CommentTime) == com.GetDayNo() {
+func PublicComment(u iUser, cm *Comment) {
+	if !u.CanComment() {
 		cnt := conf.GetCommentCfg().Cnt
-		if u.CommentCnt >= cnt {
-			fmt.Printf("Allow public comment only %d times a day!\n", cnt)
-			return
-		}
+		fmt.Printf("Allow public comment only %d times a day!\n", cnt)
+		return
 	}
-	u.CommentTime = time.Now().Unix()
-	u.CommentCnt += 1
-	u.save()
+	u.OnComment()
 	cm.save()
 	fmt.Printf("uid=%d comment successful!\n", cm.Uid)
 }

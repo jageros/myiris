@@ -1,4 +1,4 @@
-package com
+package utils
 
 import (
 	"crypto/md5"

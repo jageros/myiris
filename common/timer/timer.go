@@ -1,11 +1,13 @@
-package com
+package timer
 
 import (
 	"math"
 	"time"
 )
 
-var timeBase = time.Date(2019, 9, 1, 0, 0, 0, 0, time.Now().Location()).Unix()
+const TimeBaseUnix = 1567267200
+
+//var timeBase = time.Date(2019, 9, 1, 0, 0, 0, 0, time.Now().Location()).Unix()
 
 func GetDayNo(args ...int64) int {
 	var t int64
@@ -14,7 +16,7 @@ func GetDayNo(args ...int64) int {
 	} else {
 		t = time.Now().Unix()
 	}
-	return int((t-timeBase)/86400 + 1)
+	return int((t-TimeBaseUnix)/86400 + 1)
 }
 
 func GetWeekNo(args ... int64) int {
