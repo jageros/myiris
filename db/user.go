@@ -63,6 +63,9 @@ func (u *User) CanComment() bool {
 		if u.CommentCnt >= cnt {
 			return false
 		}
+	} else {
+		u.CommentCnt = 0
+		u.save()
 	}
 	return true
 }
