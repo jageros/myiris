@@ -2,9 +2,9 @@ package db
 
 import (
 	"github.com/jinzhu/gorm"
-	"myiris/common/timer"
-	"myiris/common/utils"
-	"myiris/conf"
+	"github.com/lhj168os/myiris/common/timer"
+	"github.com/lhj168os/myiris/common/utils"
+	"github.com/lhj168os/myiris/conf"
 	"time"
 )
 
