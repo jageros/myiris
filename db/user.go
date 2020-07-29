@@ -15,6 +15,7 @@ type iUser interface {
 	GetUid() uint
 	GetName() string
 	CanComment() bool
+	IsVip() bool
 }
 
 // ==================================user=================================
@@ -30,6 +31,8 @@ type User struct {
 	CommentCnt  int
 	Score       int
 	VipTime     int64
+	LikeCnt     int
+	HateCnt     int
 }
 
 // =============== interface implement ================
@@ -68,6 +71,13 @@ func (u *User) CanComment() bool {
 		u.save()
 	}
 	return true
+}
+
+func (u *User) IsVip() bool {
+	if u.VipTime > time.Now().Unix() {
+		return true
+	}
+	return false
 }
 
 // ===================================================
