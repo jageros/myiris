@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/lhj168os/myiris/common/timer"
+	"github.com/lhj168os/myiris/db"
 	"math/rand"
-	"myiris/common/timer"
-	"myiris/db"
 )
 
 func main() {

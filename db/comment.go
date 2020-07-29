@@ -3,8 +3,8 @@ package db
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"myiris/common/timer"
-	"myiris/conf"
+	"github.com/lhj168os/myiris/common/timer"
+	"github.com/lhj168os/myiris/conf"
 	"strconv"
 )
 
